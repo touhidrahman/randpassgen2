@@ -1,0 +1,27 @@
+{
+  "name": "randpassgen2",
+  "version": "2.0.0",
+  "description": "A dead simple node module to generate random password",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/touhidrahman/randpassgen2.git"
+  },
+  "keywords": [
+    "password",
+    "random",
+    "generator",
+    "password",
+    "generator"
+  ],
+  "author": "Touhidur Rahman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/touhidrahman/randpassgen2/issues"
+  },
+  "homepage": "https://github.com/touhidrahman/randpassgen2#readme"
+}
