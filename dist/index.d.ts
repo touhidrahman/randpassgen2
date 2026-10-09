@@ -1,1 +1,0 @@
-export { generateRandPass } from './main';
