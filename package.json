@@ -2,14 +2,42 @@
   "name": "randpassgen2",
   "version": "2.0.0",
   "description": "A dead simple node module to generate random password",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "unpkg": "./dist/index.global.js",
+  "jsdelivr": "./dist/index.global.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "browser": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16"
+  },
   "files": [
     "dist"
   ],
   "packageManager": "pnpm@12.9.1",
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1",
     "release:major": "pnpm version major --tag-version-prefix \"v\" && git push && git push origin \"v$(node -p \"require('./package.json').version\")\"",
     "release:minor": "pnpm version minor --tag-version-prefix \"v\" && git push && git push origin \"v$(node -p \"require('./package.json').version\")\"",
@@ -32,6 +60,7 @@
   },
   "homepage": "https://github.com/touhidrahman/randpassgen2#readme",
   "devDependencies": {
+    "tsup": "^8.5.1",
     "typescript": "^6.0.3"
   }
 }

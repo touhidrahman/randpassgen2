@@ -9,18 +9,37 @@ $ npm install randpassgen2
 ```
 
 # Usage
+
+The package ships as both an ES module (`import`) and CommonJS (`require`), and works in Node.js and browsers.
+
 ### Signature
 ```
 randPass(length: number, options?: RandPassGenOptions | QuickRPGOption)
 ```
-Use in Typescript or Node.js:
+Use in TypeScript, modern Node.js, or a bundler:
 ```
 import { randPass } from 'randpassgen2';
 const pass = randPass(...);
+```
+Use in CommonJS:
+```
+const { randPass } = require('randpassgen2');
+// or: const rpg = require('randpassgen2');
+const pass = randPass(...);
+```
 
-// OR
-const rpg = require('randpassgen2');
-const pass = rpg.randPass(...);
+### Browser
+Bundlers (Vite, webpack, Rollup, esbuild, …) automatically pick the browser-friendly ES module build:
+```
+import { randPass } from 'randpassgen2';
+const pass = randPass(8);
+```
+You can also load it directly from a CDN, which exposes the `randpassgen2` global:
+```html
+<script src="https://unpkg.com/randpassgen2"></script>
+<script>
+    const pass = randpassgen2.randPass(8);
+</script>
 ```
 ### Defaults
 By default `randpassgen2` uses alphanumeric + uppercase + common special chars to generate random password. You can provide options to change the behavior. 
