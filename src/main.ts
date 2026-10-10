@@ -49,7 +49,7 @@ export const DefaultRandPassGenOptions: RandPassGenOptions = {
     onlySafeAlpha: false,
 };
 
-type QuickOption =
+type QuickRPGOption =
     | "a" // lowercase letters (a-z)
     | "a1" // lowercase letters (a-z) and numbers (0-9)
     | "a1*" // lowercase letters (a-z), numbers (0-9), and special characters (!@#$%^*_-+=?)
@@ -76,7 +76,7 @@ type QuickOption =
  */
 export function randPass(
     length: number = 8,
-    options?: RandPassGenOptions | QuickOption,
+    options?: RandPassGenOptions | QuickRPGOption,
 ) {
     const inputOptions: RandPassGenOptions =
         typeof options === "string" ? parseQuickOption(options) : options || {};
@@ -129,7 +129,7 @@ function getCharset(options: RandPassGenOptions): string {
     return usableChars;
 }
 
-function parseQuickOption(q: QuickOption): RandPassGenOptions {
+function parseQuickOption(q: QuickRPGOption): RandPassGenOptions {
     const options: RandPassGenOptions = {
         numeric: false,
         alpha: false,
@@ -174,14 +174,3 @@ function parseQuickOption(q: QuickOption): RandPassGenOptions {
 
     return options;
 }
-
-function main() {
-    console.log(randPass(8, 'A1*'));
-    console.log(randPass(8, 'A1'));
-    console.log(randPass(8, 'A1-c'));
-    console.log(randPass(8, '/A1'));
-    console.log(randPass(8, '/A'));
-    console.log(randPass(8, '/1'));
-}
-
-main();
