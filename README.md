@@ -119,3 +119,23 @@ const pass15 = randPass(8, "/1"); // Safe numeric characters (2,4,5,6,7,8,9)
 const pass16 = randPass(8, "/A"); // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y)
 const pass17 = randPass(8, "/A1"); // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y) and safe numeric characters (2,4,5,6,7,8,9)
 ```
+
+## Benchmark
+
+Results of `pnpm bench` (randpassgen2 compared against [nanoid](https://github.com/ai/nanoid)).
+
+| benchmark | length | charset size | entropy (bits) | ns/op | ops/sec |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| nanoid(8) | 8 | 64 | 48.0 | 34 | 28,985,690 |
+| randPass(8) | 8 | 72 | 49.4 | 432 | 2,317,309 |
+| nanoid(16) | 16 | 64 | 96.0 | 51 | 19,498,432 |
+| randPass(16) | 16 | 72 | 98.7 | 707 | 1,415,416 |
+| nanoid(21) | 21 | 64 | 126.0 | 61 | 16,428,334 |
+| randPass(21) | 21 | 72 | 129.6 | 807 | 1,238,823 |
+| nanoid alnum(16) | 16 | 62 | 95.3 | 111 | 9,037,176 |
+| randPass alnum(16) | 16 | 62 | 95.3 | 668 | 1,496,731 |
+| nanoid lower+num(16) | 16 | 36 | 82.7 | 237 | 4,221,192 |
+| randPass lower+num(16) | 16 | 36 | 82.7 | 695 | 1,439,318 |
+
+_Run on Node.js v24.12.0 · randpassgen2 3.0.0 vs nanoid 6.0.2 · 500,000 iterations per case · unique in 1,000,000 8-char samples: nanoid 1,000,000, randpassgen2 1,000,000._
+
