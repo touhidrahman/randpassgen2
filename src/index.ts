@@ -1,1 +1,1 @@
-export { generateRandPass } from './main'
+export { randPass } from './main'
