@@ -43,12 +43,10 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # Auth uses the NPM_TOKEN repository secret (npm "Automation"/"Publish" token).
-      # Create one at https://www.npmjs.com/settings/<user>/tokens and add it under
-      # Settings → Secrets and variables → Actions as NPM_TOKEN.
-      #
-      # Alternatively, use npm Trusted Publishing (no long-lived token): configure
-      # this GitHub repo as a trusted publisher for `randpassgen2` on npmjs.com, then
-      # delete the `env:` block below. `--provenance` works either way.
-      - name: Publish to npm
-        run: npm publish --access public --provenance
+      - name: Configure npm auth token
+        if: ${{ secrets.NPM_TOKEN != '' }}
+        run: pnpm config set --location=user "//registry.npmjs.org/:_authToken" "${NODE_AUTH_TOKEN}"
+        env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - run: pnpm publish --access public --no-git-checks
