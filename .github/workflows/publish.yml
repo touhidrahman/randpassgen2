@@ -25,6 +25,10 @@ jobs:
   publish:
     name: Build & publish
     runs-on: ubuntu-latest
+    # Secrets can't be referenced in `if:` conditions, so expose the token
+    # through a job-level env var and test `env.*` instead.
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -44,9 +48,7 @@ jobs:
         run: pnpm build
 
       - name: Configure npm auth token
-        if: ${{ secrets.NPM_TOKEN != '' }}
+        if: env.NODE_AUTH_TOKEN != ''
         run: pnpm config set --location=user "//registry.npmjs.org/:_authToken" "${NODE_AUTH_TOKEN}"
-        env:
-            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - run: pnpm publish --access public --no-git-checks
