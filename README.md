@@ -46,6 +46,7 @@ By default `randpassgen2` uses alphanumeric + uppercase + common special chars t
 ```
 length: number = 8,
 options: RandPassGenOptions = {
+    prefix: '',             // prefix string
     alpha: true,            // abcdefghijklmnopqrstuvwxyz
     numeric: true,          // 0123456789
     case: 'mixed',          // 'lower', 'upper', 'mixed'
