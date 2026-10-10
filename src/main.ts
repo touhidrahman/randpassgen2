@@ -19,11 +19,35 @@ export function randPass(
     };
 
     const usableChars = getCharset(userOptions);
+    const bytes = new Uint8Array(length);
+    crypto.getRandomValues(bytes);
+
     let output = userOptions.prefix || "";
+    if (inputOptions.useCryptoRandom) {
+        output += generateByCryptoRandom(usableChars, length);
+    } else {
+        output += generateByMathRandom(usableChars, length);
+    }
+
+    return output;
+}
+
+function generateByCryptoRandom(chars: string, length: number): string {
+    const bytes = new Uint8Array(length);
+    crypto.getRandomValues(bytes);
+
+    let output = "";
     for (let i = 0; i < length; i++) {
-        output += usableChars.charAt(
-            Math.floor(Math.random() * usableChars.length),
-        );
+        output += chars[bytes[i] % chars.length];
+    }
+
+    return output;
+}
+
+function generateByMathRandom(chars: string, length: number): string {
+    let output = "";
+    for (let i = 0; i < length; i++) {
+        output += chars[Math.floor(Math.random() * chars.length)];
     }
 
     return output;
@@ -70,6 +94,7 @@ function parseQuickOption(q: QuickRPGOption): RandPassGenOptions {
         omitConfusing: false,
         onlySafeNums: false,
         onlySafeAlpha: false,
+        useCryptoRandom: true,
     };
 
     if (q.includes("a") && !q.includes("A")) {
@@ -102,6 +127,9 @@ function parseQuickOption(q: QuickRPGOption): RandPassGenOptions {
     if (q.includes("/A1")) {
         options.onlySafeAlpha = true;
         options.onlySafeNums = true;
+    }
+    if (q.includes("!")) {
+        options.useCryptoRandom = false;
     }
 
     return options;

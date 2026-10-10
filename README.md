@@ -54,6 +54,8 @@ options: RandPassGenOptions = {
     omitConfusing: false,  // Omit '0O1lI' and special chars
     onlySafeNums: false,   // Only 2,4,5,6,7,8,9
     onlySafeAlpha: false,  // Only A, C, H, J, K, L, Q, R, W, X, Y
+    useCryptoRandom: true, // Use cryptographically secure random number generator (crypto.getRandomValues or crypto.randomBytes)
+                             // otherwise Math.random() will be used
 }
 ```
 
@@ -76,48 +78,41 @@ const pass = require('randpassgen2').randPass(8, {
 
 You may also use the following quick options instead of a verbose object to generate random strings. The following options are available:
 
-```typescript
-type QuickRPGOption =
-    | "a"       // lowercase letters (a-z)
-    | "a1"      // lowercase letters (a-z) and numbers (0-9)
-    | "a1*"     // lowercase letters (a-z), numbers (0-9), and special characters (!@#$%^*_-+=?)
-    | "A"       // uppercase letters (A-Z)
-    | "A1"      // uppercase letters (A-Z) and numbers (0-9)
-    | "A1*"     // uppercase letters (A-Z), numbers (0-9), and special characters (!@#$%^*_-+=?)
-    | "aA"      // lowercase letters (a-z) and uppercase letters (A-Z)
-    | "aA1"     // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9)
-    | "aA1*"    // lowercase letters (a-z), uppercase letters (A-Z), numbers (0-9), and special characters (!@#$%^*_-+=?)
-    | "a-c"     // lowercase letters (a-z) without confusing characters (0O1lI)
-    | "a1-c"    // lowercase letters (a-z) and numbers (0-9) without confusing characters (0O1lI)
-    | "A-c"     // uppercase letters (A-Z) without confusing characters (0O1lI)
-    | "A1-c"    // uppercase letters (A-Z) and numbers (0-9) without confusing characters (0O1lI)
-    | "aA1-c"   // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9) without confusing characters (0O1lI)
-    | "/1"      // Safe numeric characters (2,4,5,6,7,8,9)
-    | "/A"      // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y)
-    | "/A1";    // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y) and safe numeric characters (2,4,5,6,7,8,9)
 ```
+"a"       // lowercase letters (a-z)
+"a1"      // lowercase letters (a-z) and numbers (0-9)
+"a1*"     // lowercase letters (a-z), numbers (0-9), and special characters (!@#$%^*_-+=?)
+"A"       // uppercase letters (A-Z)
+"A1"      // uppercase letters (A-Z) and numbers (0-9)
+"A1*"     // uppercase letters (A-Z), numbers (0-9), and special characters (!@#$%^*_-+=?)
+"aA"      // lowercase letters (a-z) and uppercase letters (A-Z)
+"aA1"     // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9)
+"aA1*"    // lowercase letters (a-z), uppercase letters (A-Z), numbers (0-9), and special characters (!@#$%^*_-+=?)
+"a-c"     // lowercase letters (a-z) without confusing characters (0O1lI)
+"a1-c"    // lowercase letters (a-z) and numbers (0-9) without confusing characters (0O1lI)
+"A-c"     // uppercase letters (A-Z) without confusing characters (0O1lI)
+"A1-c"    // uppercase letters (A-Z) and numbers (0-9) without confusing characters (0O1lI)
+"aA1-c"   // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9) without confusing characters (0O1lI)
+"/1"      // Safe numeric characters (2,4,5,6,7,8,9)
+"/A"      // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y)
+"/A1";    // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y) and safe numeric characters (2,4,5,6,7,8,9)
+```
+**Use `!` before quick options, for example - `!aA1*`, to use non-cryptographically secure random number generator (e.g.: `Math.random()`). This is faster but less secure.**
 
 ### Usage
 ```typescript
 import { randPass } from 'randpassgen2';
 
-const pass1 = randPass(8, "a"); // lowercase letters (a-z)
-const pass2 = randPass(8, "a1"); // lowercase letters (a-z) and numbers (0-9)
-const pass3 = randPass(8, "a1*"); // lowercase letters (a-z), numbers (0-9), and special characters (!@#$%^*_-+=?)
-const pass4 = randPass(8, "A"); // uppercase letters (A-Z)
-const pass5 = randPass(8, "A1"); // uppercase letters (A-Z) and numbers (0-9)
-const pass6 = randPass(8, "A1*"); // uppercase letters (A-Z), numbers (0-9), and special characters (!@#$%^*_-+=?)
-const pass7 = randPass(8, "aA"); // lowercase letters (a-z) and uppercase letters (A-Z)
-const pass8 = randPass(8, "aA1"); // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9)
-const pass9 = randPass(8, "aA1*"); // lowercase letters (a-z), uppercase letters (A-Z), numbers (0-9), and special characters (!@#$%^*_-+=?)
-const pass10 = randPass(8, "a-c"); // lowercase letters (a-z) without confusing characters (0O1lI)
-const pass11 = randPass(8, "a1-c"); // lowercase letters (a-z) and numbers (0-9) without confusing characters (0O1lI)
-const pass12 = randPass(8, "A-c"); // uppercase letters (A-Z) without confusing characters (0O1lI)
-const pass13 = randPass(8, "A1-c"); // uppercase letters (A-Z) and numbers (0-9) without confusing characters (0O1lI)
-const pass14 = randPass(8, "aA1-c"); // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9) without confusing characters (0O1lI)
-const pass15 = randPass(8, "/1"); // Safe numeric characters (2,4,5,6,7,8,9)
-const pass16 = randPass(8, "/A"); // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y)
-const pass17 = randPass(8, "/A1"); // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y) and safe numeric characters (2,4,5,6,7,8,9)
+randPass(8, "a1*"); // lowercase letters (a-z), numbers (0-9), and special characters (!@#$%^*_-+=?)
+randPass(8, "A"); // uppercase letters (A-Z)
+randPass(8, "aA1"); // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9)
+randPass(8, "aA1*"); // lowercase letters (a-z), uppercase letters (A-Z), numbers (0-9), and special characters (!@#$%^*_-+=?)
+randPass(8, "a-c"); // lowercase letters (a-z) without confusing characters (0O1lI)
+randPass(8, "a1-c"); // lowercase letters (a-z) and numbers (0-9) without confusing characters (0O1lI)
+randPass(8, "aA1-c"); // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9) without confusing characters (0O1lI)
+randPass(8, "/1"); // Safe numeric characters (2,4,5,6,7,8,9)
+randPass(8, "/A"); // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y)
+randPass(8, "/A1"); // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y) and safe numeric characters (2,4,5,6,7,8,9)
 ```
 
 ## Benchmark
@@ -126,16 +121,15 @@ Results of `pnpm bench` (randpassgen2 compared against [nanoid](https://github.c
 
 | benchmark | length | charset size | entropy (bits) | ns/op | ops/sec |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| nanoid(8) | 8 | 64 | 48.0 | 34 | 28,985,690 |
-| randPass(8) | 8 | 72 | 49.4 | 432 | 2,317,309 |
-| nanoid(16) | 16 | 64 | 96.0 | 51 | 19,498,432 |
-| randPass(16) | 16 | 72 | 98.7 | 707 | 1,415,416 |
-| nanoid(21) | 21 | 64 | 126.0 | 61 | 16,428,334 |
-| randPass(21) | 21 | 72 | 129.6 | 807 | 1,238,823 |
-| nanoid alnum(16) | 16 | 62 | 95.3 | 111 | 9,037,176 |
-| randPass alnum(16) | 16 | 62 | 95.3 | 668 | 1,496,731 |
-| nanoid lower+num(16) | 16 | 36 | 82.7 | 237 | 4,221,192 |
-| randPass lower+num(16) | 16 | 36 | 82.7 | 695 | 1,439,318 |
+| nanoid(8) | 8 | 64 | 48.0 | 52 | 19,347,055 |
+| randPass(8) | 8 | 72 | 49.4 | 3019 | 331,227 |
+| nanoid(16) | 16 | 64 | 96.0 | 53 | 18,835,470 |
+| randPass(16) | 16 | 72 | 98.7 | 3187 | 313,771 |
+| nanoid(21) | 21 | 64 | 126.0 | 54 | 18,434,461 |
+| randPass(21) | 21 | 72 | 129.6 | 3325 | 300,728 |
+| nanoid alnum(16) | 16 | 62 | 95.3 | 93 | 10,767,605 |
+| randPass alnum(16) | 16 | 62 | 95.3 | 3344 | 299,065 |
+| nanoid lower+num(16) | 16 | 36 | 82.7 | 217 | 4,618,758 |
+| randPass lower+num(16) | 16 | 36 | 82.7 | 3215 | 311,033 |
 
 _Run on Node.js v24.12.0 · randpassgen2 3.0.0 vs nanoid 6.0.2 · 500,000 iterations per case · unique in 1,000,000 8-char samples: nanoid 1,000,000, randpassgen2 1,000,000._
-
