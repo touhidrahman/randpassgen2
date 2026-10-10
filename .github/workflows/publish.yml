@@ -1,0 +1,54 @@
+name: Publish to npm
+
+# Publishes the package to the npm registry.
+#
+# Triggered by pushing a version tag such as `v2.0.1` — which is exactly what the
+# `release:patch` / `release:minor` / `release:major` scripts in package.json do —
+# or manually from the Actions tab.
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+# `id-token: write` is required for npm provenance (OIDC).
+permissions:
+  contents: read
+  id-token: write
+
+# Never run two publishes at the same time.
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Build & publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        # Reads the exact version from the "packageManager" field.
+        uses: pnpm/setup@v3
+        with:
+            cache: true
+            install: true
+            require-lockfile: true
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm build
+
+      # Auth uses the NPM_TOKEN repository secret (npm "Automation"/"Publish" token).
+      # Create one at https://www.npmjs.com/settings/<user>/tokens and add it under
+      # Settings → Secrets and variables → Actions as NPM_TOKEN.
+      #
+      # Alternatively, use npm Trusted Publishing (no long-lived token): configure
+      # this GitHub repo as a trusted publisher for `randpassgen2` on npmjs.com, then
+      # delete the `env:` block below. `--provenance` works either way.
+      - name: Publish to npm
+        run: npm publish --access public --provenance
