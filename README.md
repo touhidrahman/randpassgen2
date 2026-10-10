@@ -121,15 +121,34 @@ Results of `pnpm bench` (randpassgen2 compared against [nanoid](https://github.c
 
 | benchmark | length | charset size | entropy (bits) | ns/op | ops/sec |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| nanoid(8) | 8 | 64 | 48.0 | 52 | 19,347,055 |
-| randPass(8) | 8 | 72 | 49.4 | 3019 | 331,227 |
-| nanoid(16) | 16 | 64 | 96.0 | 53 | 18,835,470 |
-| randPass(16) | 16 | 72 | 98.7 | 3187 | 313,771 |
-| nanoid(21) | 21 | 64 | 126.0 | 54 | 18,434,461 |
-| randPass(21) | 21 | 72 | 129.6 | 3325 | 300,728 |
-| nanoid alnum(16) | 16 | 62 | 95.3 | 93 | 10,767,605 |
-| randPass alnum(16) | 16 | 62 | 95.3 | 3344 | 299,065 |
-| nanoid lower+num(16) | 16 | 36 | 82.7 | 217 | 4,618,758 |
-| randPass lower+num(16) | 16 | 36 | 82.7 | 3215 | 311,033 |
+| nanoid(8) | 8 | 64 | 48.0 | 29 | 33,990,409 |
+| randPass crypto(8) | 8 | 72 | 49.4 | 3037 | 329,313 |
+| randPass math(8) | 8 | 72 | 49.4 | 321 | 3,113,150 |
+| nanoid(16) | 16 | 64 | 96.0 | 45 | 22,004,158 |
+| randPass crypto(16) | 16 | 72 | 98.7 | 3161 | 316,313 |
+| randPass math(16) | 16 | 72 | 98.7 | 495 | 2,020,873 |
+| nanoid(21) | 21 | 64 | 126.0 | 53 | 18,835,313 |
+| randPass crypto(21) | 21 | 72 | 129.6 | 3192 | 313,326 |
+| randPass math(21) | 21 | 72 | 129.6 | 599 | 1,669,593 |
+| nanoid alnum(16) | 16 | 62 | 95.3 | 92 | 10,918,380 |
+| randPass crypto alnum(16) | 16 | 62 | 95.3 | 3306 | 302,460 |
+| randPass math alnum(16) | 16 | 62 | 95.3 | 509 | 1,966,420 |
+| nanoid lower+num(16) | 16 | 36 | 82.7 | 197 | 5,073,347 |
+| randPass crypto lower+num(16) | 16 | 36 | 82.7 | 3239 | 308,772 |
+| randPass math lower+num(16) | 16 | 36 | 82.7 | 542 | 1,844,932 |
 
-_Run on Node.js v24.12.0 · randpassgen2 3.0.0 vs nanoid 6.0.2 · 500,000 iterations per case · unique in 1,000,000 8-char samples: nanoid 1,000,000, randpassgen2 1,000,000._
+Relative throughput (vs [nanoid](https://github.com/ai/nanoid)):
+
+- `nanoid(8)` is **103.2×** faster than `randPass crypto(8)`
+- `nanoid(8)` is **10.9×** faster than `randPass math(8)`
+- `nanoid(16)` is **69.6×** faster than `randPass crypto(16)`
+- `nanoid(16)` is **10.9×** faster than `randPass math(16)`
+- `nanoid(21)` is **60.1×** faster than `randPass crypto(21)`
+- `nanoid(21)` is **11.3×** faster than `randPass math(21)`
+- `nanoid alnum(16)` is **36.1×** faster than `randPass crypto alnum(16)`
+- `nanoid alnum(16)` is **5.6×** faster than `randPass math alnum(16)`
+- `nanoid lower+num(16)` is **16.4×** faster than `randPass crypto lower+num(16)`
+- `nanoid lower+num(16)` is **2.7×** faster than `randPass math lower+num(16)`
+
+_Run on Node.js v24.12.0 · randpassgen2 3.0.0 vs nanoid 6.0.2 · 500,000 iterations per case · unique in 1,000,000 8-char samples: nanoid 1,000,000, randpassgen2 crypto 1,000,000, randpassgen2 math 1,000,000._
+
