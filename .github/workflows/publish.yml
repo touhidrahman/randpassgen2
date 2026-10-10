@@ -49,6 +49,6 @@ jobs:
 
       - name: Configure npm auth token
         if: env.NODE_AUTH_TOKEN != ''
-        run: pnpm config set --location=user "//registry.npmjs.org/:_authToken" "${NODE_AUTH_TOKEN}"
+        run: pnpm config set --location=project "//registry.npmjs.org/:_authToken" "${NODE_AUTH_TOKEN}"
 
       - run: pnpm publish --access public --no-git-checks
