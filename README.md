@@ -51,9 +51,9 @@ options: RandPassGenOptions = {
     numeric: true,          // 0123456789
     case: 'mixed',          // 'lower', 'upper', 'mixed'
     specialChars: true,    // ! @ # $ % ^ * _ - + = ?
-    omitConfusing: false,  // '0', 'O', '1', 'l', 'I'
-    onlySafeNums: false,   // 2,4,5,6,7,8,9
-    onlySafeAlpha: false,  // A, C, H, J, K, L, Q, R, W, X, Y
+    omitConfusing: false,  // Omit '0O1lI' and special chars
+    onlySafeNums: false,   // Only 2,4,5,6,7,8,9
+    onlySafeAlpha: false,  // Only A, C, H, J, K, L, Q, R, W, X, Y
 }
 ```
 
@@ -72,7 +72,7 @@ const pass = require('randpassgen2').randPass(8, {
 });
 ```
 
-## Quick RPG Options
+## Quick Options
 
 You may also use the following quick options instead of a verbose object to generate random strings. The following options are available:
 
@@ -87,11 +87,11 @@ type QuickRPGOption =
     | "aA"      // lowercase letters (a-z) and uppercase letters (A-Z)
     | "aA1"     // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9)
     | "aA1*"    // lowercase letters (a-z), uppercase letters (A-Z), numbers (0-9), and special characters (!@#$%^*_-+=?)
-    | "a-c"     // lowercase letters (a-z) without confusing characters (like '0', 'O', '1', 'l', 'I')
-    | "a1-c"    // lowercase letters (a-z) and numbers (0-9) without confusing characters (like '0', 'O', '1', 'l', 'I')
-    | "A-c"     // uppercase letters (A-Z) without confusing characters (like '0', 'O', '1', 'l', 'I')
-    | "A1-c"    // uppercase letters (A-Z) and numbers (0-9) without confusing characters (like '0', 'O', '1', 'l', 'I')
-    | "aA1-c"   // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9) without confusing characters (like '0', 'O', '1', 'l', 'I')
+    | "a-c"     // lowercase letters (a-z) without confusing characters (0O1lI)
+    | "a1-c"    // lowercase letters (a-z) and numbers (0-9) without confusing characters (0O1lI)
+    | "A-c"     // uppercase letters (A-Z) without confusing characters (0O1lI)
+    | "A1-c"    // uppercase letters (A-Z) and numbers (0-9) without confusing characters (0O1lI)
+    | "aA1-c"   // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9) without confusing characters (0O1lI)
     | "/1"      // Safe numeric characters (2,4,5,6,7,8,9)
     | "/A"      // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y)
     | "/A1";    // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y) and safe numeric characters (2,4,5,6,7,8,9)
@@ -110,11 +110,11 @@ const pass6 = randPass(8, "A1*"); // uppercase letters (A-Z), numbers (0-9), and
 const pass7 = randPass(8, "aA"); // lowercase letters (a-z) and uppercase letters (A-Z)
 const pass8 = randPass(8, "aA1"); // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9)
 const pass9 = randPass(8, "aA1*"); // lowercase letters (a-z), uppercase letters (A-Z), numbers (0-9), and special characters (!@#$%^*_-+=?)
-const pass10 = randPass(8, "a-c"); // lowercase letters (a-z) without confusing characters (like '0', 'O', '1', 'l', 'I')
-const pass11 = randPass(8, "a1-c"); // lowercase letters (a-z) and numbers (0-9) without confusing characters (like '0', 'O', '1', 'l', 'I')
-const pass12 = randPass(8, "A-c"); // uppercase letters (A-Z) without confusing characters (like '0', 'O', '1', 'l', 'I')
-const pass13 = randPass(8, "A1-c"); // uppercase letters (A-Z) and numbers (0-9) without confusing characters (like '0', 'O', '1', 'l', 'I')
-const pass14 = randPass(8, "aA1-c"); // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9) without confusing characters (like '0', 'O', '1', 'l', 'I')
+const pass10 = randPass(8, "a-c"); // lowercase letters (a-z) without confusing characters (0O1lI)
+const pass11 = randPass(8, "a1-c"); // lowercase letters (a-z) and numbers (0-9) without confusing characters (0O1lI)
+const pass12 = randPass(8, "A-c"); // uppercase letters (A-Z) without confusing characters (0O1lI)
+const pass13 = randPass(8, "A1-c"); // uppercase letters (A-Z) and numbers (0-9) without confusing characters (0O1lI)
+const pass14 = randPass(8, "aA1-c"); // lowercase letters (a-z), uppercase letters (A-Z), and numbers (0-9) without confusing characters (0O1lI)
 const pass15 = randPass(8, "/1"); // Safe numeric characters (2,4,5,6,7,8,9)
 const pass16 = randPass(8, "/A"); // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y)
 const pass17 = randPass(8, "/A1"); // Safe alphabetic characters (A, C, H, J, K, L, Q, R, W, X, Y) and safe numeric characters (2,4,5,6,7,8,9)
