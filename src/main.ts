@@ -94,7 +94,7 @@ function getCharset(options: RandPassGenOptions): string {
 }
 
 function parseQuickOption(q: QuickRPGOption): RandPassGenOptions {
-    const options = baseOptions;
+    const options: RandPassGenOptions = { ...baseOptions };
 
     if (q.includes("a") && !q.includes("A")) {
         options.alpha = true;
