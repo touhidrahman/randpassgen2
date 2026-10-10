@@ -40,6 +40,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "bench": "tsx bench/compare.ts",
     "release:major": "pnpm version major --tag-version-prefix \"v\" && git push && git push origin \"v$(node -p \"require('./package.json').version\")\"",
     "release:minor": "pnpm version minor --tag-version-prefix \"v\" && git push && git push origin \"v$(node -p \"require('./package.json').version\")\"",
     "release:patch": "pnpm version patch --tag-version-prefix \"v\" && git push && git push origin \"v$(node -p \"require('./package.json').version\")\"",
@@ -61,7 +62,9 @@
   },
   "homepage": "https://github.com/touhidrahman/randpassgen2#readme",
   "devDependencies": {
+    "nanoid": "^6.0.2",
     "tsup": "^8.5.1",
+    "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "vitest": "^5.0.3"
   }
