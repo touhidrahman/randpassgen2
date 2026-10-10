@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { randPass } from "../src/main";
 import { defaultOptions, UPPER, LOWER, DIGITS, SPECIAL, CONFUSING, SAFE_NUMS, SAFE_ALPHA } from "../src/values";
 
@@ -42,6 +42,7 @@ describe("defaultOptions", () => {
             omitConfusing: false,
             onlySafeNums: false,
             onlySafeAlpha: false,
+            useCryptoRandom: true,
         });
     });
 });
@@ -197,5 +198,56 @@ describe("randPass prefix", () => {
         const pass = randPass(8, { prefix: "!", case: "lower", specialChars: false });
         expect(pass[0]).toBe("!");
         expectOnlyChars(pass.slice(1), LOWER + DIGITS);
+    });
+});
+
+describe("runtime guards", () => {
+    const originalCrypto = globalThis.crypto;
+
+    /** Simulate a runtime without crypto (e.g. jsdom, very old Node). */
+    const setCrypto = (value: unknown) => {
+        Object.defineProperty(globalThis, "crypto", {
+            value,
+            configurable: true,
+            writable: true,
+        });
+    };
+
+    afterEach(() => setCrypto(originalCrypto));
+
+    it("falls back to Math.random without throwing when crypto is unavailable", () => {
+        setCrypto(undefined);
+        expect(() => randPass(12)).not.toThrow();
+        expect(randPass(12).length).toBe(12);
+    });
+
+    it("honours useCryptoRandom: false in a crypto-less runtime", () => {
+        setCrypto(undefined);
+        const pass = randPass(10, { useCryptoRandom: false });
+        expect(pass.length).toBe(10);
+        expectOnlyChars(pass, UPPER + LOWER + DIGITS + SPECIAL);
+    });
+
+    it("supports the '!' quick option in a crypto-less runtime", () => {
+        setCrypto(undefined);
+        const pass = randPass(10, "!a");
+        expect(pass.length).toBe(10);
+        expectOnlyChars(pass, LOWER);
+    });
+
+    it("uses the crypto path by default when available", () => {
+        expect(randPass(8).length).toBe(8);
+        expectOnlyChars(randPass(32), UPPER + LOWER + DIGITS + SPECIAL);
+    });
+
+    it("returns only the prefix when the resulting charset is empty", () => {
+        const pass = randPass(5, {
+            alpha: false,
+            numeric: false,
+            specialChars: false,
+            omitConfusing: false,
+        });
+        expect(pass).toBe("");
+        expect(randPass(5, { ...defaultOptions, alpha: false, numeric: false, specialChars: false, prefix: "x" })).toBe("x");
     });
 });

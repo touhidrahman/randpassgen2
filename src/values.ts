@@ -9,6 +9,18 @@ export const defaultOptions: RandPassGenOptions = {
     omitConfusing: false,
     onlySafeNums: false,
     onlySafeAlpha: false,
+    useCryptoRandom: true,
+};
+
+export const baseOptions: RandPassGenOptions = {
+    numeric: false,
+    alpha: false,
+    case: "mixed",
+    specialChars: false,
+    omitConfusing: false,
+    onlySafeNums: false,
+    onlySafeAlpha: false,
+    useCryptoRandom: true,
 };
 
 export const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

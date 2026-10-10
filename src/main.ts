@@ -1,5 +1,5 @@
 import { RandPassGenOptions, QuickRPGOption } from "./types";
-import { defaultOptions, SAFE_NUMS, SAFE_ALPHA, UPPER, LOWER, DIGITS, CONFUSING, SPECIAL } from "./values";
+import { defaultOptions, SAFE_NUMS, SAFE_ALPHA, UPPER, LOWER, DIGITS, CONFUSING, SPECIAL, baseOptions } from "./values";
 
 /**
  * Generate a random string of given length with the given options.
@@ -19,28 +19,37 @@ export function randPass(
     };
 
     const usableChars = getCharset(userOptions);
-    const bytes = new Uint8Array(length);
-    crypto.getRandomValues(bytes);
 
-    let output = userOptions.prefix || "";
-    if (inputOptions.useCryptoRandom) {
-        output += generateByCryptoRandom(usableChars, length);
-    } else {
-        output += generateByMathRandom(usableChars, length);
-    }
+    if (usableChars.length === 0) return userOptions.prefix || "";
 
-    return output;
+    const cryptoSource =
+        userOptions.useCryptoRandom !== false ? getCryptoRandomSource() : null;
+
+    const randomPart = cryptoSource
+        ? generateByCryptoRandom(usableChars, length, cryptoSource)
+        : generateByMathRandom(usableChars, length);
+
+    return (userOptions.prefix || "") + randomPart;
 }
 
-function generateByCryptoRandom(chars: string, length: number): string {
+/** Returns `globalThis.crypto` when it provides `getRandomValues`, else `null`. */
+function getCryptoRandomSource(): Crypto | null {
+    const source = globalThis.crypto;
+    return typeof source?.getRandomValues === "function" ? source : null;
+}
+
+function generateByCryptoRandom(
+    chars: string,
+    length: number,
+    cryptoSource: Crypto,
+): string {
     const bytes = new Uint8Array(length);
-    crypto.getRandomValues(bytes);
+    if (length > 0) cryptoSource.getRandomValues(bytes);
 
     let output = "";
     for (let i = 0; i < length; i++) {
         output += chars[bytes[i] % chars.length];
     }
-
     return output;
 }
 
@@ -49,7 +58,6 @@ function generateByMathRandom(chars: string, length: number): string {
     for (let i = 0; i < length; i++) {
         output += chars[Math.floor(Math.random() * chars.length)];
     }
-
     return output;
 }
 
@@ -86,16 +94,7 @@ function getCharset(options: RandPassGenOptions): string {
 }
 
 function parseQuickOption(q: QuickRPGOption): RandPassGenOptions {
-    const options: RandPassGenOptions = {
-        numeric: false,
-        alpha: false,
-        case: "mixed",
-        specialChars: false,
-        omitConfusing: false,
-        onlySafeNums: false,
-        onlySafeAlpha: false,
-        useCryptoRandom: true,
-    };
+    const options = baseOptions;
 
     if (q.includes("a") && !q.includes("A")) {
         options.alpha = true;
